@@ -59,7 +59,7 @@ org.springframework.boot.autoconfigure.r2dbc.R2dbcHints
 org.springframework.boot.autoconfigure.rsocket.RSocketMessagingHints
 org.springframework.boot.autoconfigure.security.servlet.SecurityHints
 org.springframework.boot.autoconfigure.session.SessionHints
-org.springframework.boot.autoconfigure.task.TaskHints
+org.springframework.cloud.task.TaskHints
 org.springframework.boot.autoconfigure.transaction.TransactionHints
 org.springframework.boot.autoconfigure.validation.ValidationHints
 org.springframework.boot.autoconfigure.websocket.servlet.WebSocketHints
