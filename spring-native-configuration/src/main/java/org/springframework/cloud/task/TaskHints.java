@@ -25,24 +25,20 @@ import org.springframework.cloud.task.configuration.DefaultTaskConfigurer;
 import org.springframework.cloud.task.configuration.EnableTask;
 import org.springframework.cloud.task.configuration.SimpleTaskAutoConfiguration;
 import org.springframework.cloud.task.repository.support.TaskRepositoryInitializer;
-import org.springframework.nativex.extension.NativeImageConfiguration;
-import org.springframework.nativex.extension.NativeImageHint;
-import org.springframework.nativex.extension.ProxyInfo;
-import org.springframework.nativex.extension.ResourcesInfo;
-import org.springframework.nativex.extension.TypeInfo;
-import org.springframework.nativex.type.AccessBits;
+import org.springframework.nativex.hint.AccessBits;
+import org.springframework.nativex.hint.NativeHint;
+import org.springframework.nativex.hint.ProxyHint;
+import org.springframework.nativex.hint.ResourceHint;
+import org.springframework.nativex.hint.TypeHint;
+import org.springframework.nativex.type.NativeConfiguration;
 
-@NativeImageHint(trigger= EnableTask.class,
-		resourcesInfos = { 
-			@ResourcesInfo(patterns = { 
-				"org/springframework/cloud/task/schema-h2.sql"
-			}),
-		},
-		typeInfos = {
-		@TypeInfo(types = {
+@NativeHint(trigger= EnableTask.class,
+		resources = @ResourceHint(patterns = "org/springframework/batch/core/schema-h2.sql"),
+		types = {
+		@TypeHint(types = {
 			AbstractDataSourceInitializer.class,
-		}, access=AccessBits.LOAD_AND_CONSTRUCT|AccessBits.DECLARED_METHODS),
-		@TypeInfo(types = {
+		}, access= AccessBits.LOAD_AND_CONSTRUCT|AccessBits.DECLARED_METHODS),
+		@TypeHint(types = {
 			DefaultTaskConfigurer.class,
 			JobLauncherApplicationRunner.class,
 			TaskJobLauncherApplicationRunner.class,
@@ -50,24 +46,24 @@ import org.springframework.nativex.type.AccessBits;
 			SimpleTaskAutoConfiguration.class,
 			TaskRepositoryInitializer.class
 		}, access=AccessBits.LOAD_AND_CONSTRUCT_AND_PUBLIC_METHODS),
-		@TypeInfo(types= {DatabaseMetaData.class})},
-		proxyInfos = {
-		@ProxyInfo(typeNames = {
+		@TypeHint(types= {DatabaseMetaData.class})},
+		proxies = {
+		@ProxyHint(typeNames = {
 				"org.springframework.cloud.task.repository.TaskRepository",
 				"org.springframework.aop.SpringProxy",
 				"org.springframework.aop.framework.Advised",
 				"org.springframework.core.DecoratingProxy"}),
-		@ProxyInfo(typeNames = {
+		@ProxyHint(typeNames = {
 				"org.springframework.cloud.task.repository.TaskExplorer",
 				"org.springframework.aop.SpringProxy",
 				"org.springframework.aop.framework.Advised",
 				"org.springframework.core.DecoratingProxy"}),
-		@ProxyInfo(typeNames = {
+		@ProxyHint(typeNames = {
 				"org.springframework.transaction.PlatformTransactionManager",
 				"org.springframework.aop.SpringProxy",
 				"org.springframework.aop.framework.Advised",
 				"org.springframework.core.DecoratingProxy"}),
-		@ProxyInfo(typeNames = {
+		@ProxyHint(typeNames = {
 				"java.util.concurrent.ConcurrentMap", 
 				"java.io.Serializable",
 				"java.util.Map",
@@ -75,4 +71,4 @@ import org.springframework.nativex.type.AccessBits;
 				"org.springframework.aop.framework.Advised",
 				"org.springframework.core.DecoratingProxy"})
 		})
-public class TaskHints implements NativeImageConfiguration { }
+public class TaskHints implements NativeConfiguration { }
