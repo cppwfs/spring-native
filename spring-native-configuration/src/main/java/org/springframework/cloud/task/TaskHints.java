@@ -17,9 +17,11 @@ package org.springframework.cloud.task;
 
 import java.sql.DatabaseMetaData;
 
-import org.springframework.boot.autoconfigure.batch.JobLauncherApplicationRunner;
+import org.springframework.amqp.rabbit.annotation.MultiRabbitBootstrapConfiguration;
 import org.springframework.boot.jdbc.AbstractDataSourceInitializer;
 import org.springframework.boot.jdbc.metadata.DataSourcePoolMetadataProvider;
+import org.springframework.cloud.task.batch.configuration.JobLaunchCondition;
+import org.springframework.cloud.task.batch.configuration.TaskJobLauncherAutoConfiguration;
 import org.springframework.cloud.task.batch.handler.TaskJobLauncherApplicationRunner;
 import org.springframework.cloud.task.configuration.DefaultTaskConfigurer;
 import org.springframework.cloud.task.configuration.EnableTask;
@@ -33,19 +35,26 @@ import org.springframework.nativex.hint.TypeHint;
 import org.springframework.nativex.type.NativeConfiguration;
 
 @NativeHint(trigger= EnableTask.class,
-		resources = @ResourceHint(patterns = "org/springframework/batch/core/schema-h2.sql"),
+		resources = @ResourceHint(patterns = "org/springframework/batch/core.schema-h2.sql"),
 		types = {
 		@TypeHint(types = {
 			AbstractDataSourceInitializer.class,
 		}, access= AccessBits.LOAD_AND_CONSTRUCT|AccessBits.DECLARED_METHODS),
 		@TypeHint(types = {
 			DefaultTaskConfigurer.class,
-			JobLauncherApplicationRunner.class,
 			TaskJobLauncherApplicationRunner.class,
 			DataSourcePoolMetadataProvider.class,
 			SimpleTaskAutoConfiguration.class,
-			TaskRepositoryInitializer.class
+			TaskRepositoryInitializer.class,
+			MultiRabbitBootstrapConfiguration.class
 		}, access=AccessBits.LOAD_AND_CONSTRUCT_AND_PUBLIC_METHODS),
+		@TypeHint(types = {
+				MultiRabbitBootstrapConfiguration.class,
+				TaskJobLauncherAutoConfiguration.class,
+				JobLaunchCondition.class
+		}, access=AccessBits.FULL_REFLECTION),
+		@TypeHint(typeNames = { "org.springframework.cloud.task.batch.configuration.JobLaunchCondition$SpringBatchJobCondition"},
+				access = AccessBits.FULL_REFLECTION),
 		@TypeHint(types= {DatabaseMetaData.class})},
 		proxies = {
 		@ProxyHint(typeNames = {
